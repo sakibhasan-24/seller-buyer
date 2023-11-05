@@ -15,7 +15,8 @@ export default function Header() {
     <nav className="flex justify-between items-center mx-2 py-3 px-6 bg-green-200 border-b-4 shadow-2xl">
       <div className="w-1/4 ">
         <img
-          className="w-[100px] "
+          onClick={() => handleRoute("/")}
+          className="w-[100px] cursor-pointer "
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUt6C1DZPHKZ4RpLb3hkqfuOjPdC0QKVCJvQ&usqp=CAU"
           alt="logo"
         />
