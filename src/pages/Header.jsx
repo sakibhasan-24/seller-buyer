@@ -1,10 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const navigateRoute = useNavigate();
+  const location = useLocation();
   const handleRoute = (route) => {
     navigateRoute(route);
+  };
+  //   add heading background based on pathname
+  const handleHeaderStyle = (route) => {
+    if (location.pathname === route) return true;
   };
   return (
     <nav className="flex justify-between items-center mx-2 py-3 px-6 bg-green-200 border-b-4 shadow-2xl">
@@ -16,10 +21,40 @@ export default function Header() {
         />
       </div>
       <ul className="flex items-center justify-evenly space-x-8 font-semibold text-gray-600 cursor-pointer">
-        <li onClick={() => handleRoute("/")}>Home</li>
-        <li onClick={() => handleRoute("/offer")}>Offers</li>
-        <li onClick={() => handleRoute("/profile")}>Profile</li>
-        <li onClick={() => handleRoute("/sign-up")}>SignIn</li>
+        <li
+          className={`${
+            handleHeaderStyle("/") && "font-bold border-b-4 border-red-300"
+          }`}
+          onClick={() => handleRoute("/")}
+        >
+          Home
+        </li>
+        <li
+          className={`${
+            handleHeaderStyle("/offer") && "font-bold border-b-4 border-red-300"
+          }`}
+          onClick={() => handleRoute("/offer")}
+        >
+          Offers
+        </li>
+        <li
+          className={`${
+            handleHeaderStyle("/profile") &&
+            "font-bold border-b-4 border-red-300"
+          }`}
+          onClick={() => handleRoute("/profile")}
+        >
+          Profile
+        </li>
+        <li
+          className={`${
+            handleHeaderStyle("/sign-up") &&
+            "font-bold border-b-4 border-red-300"
+          }`}
+          onClick={() => handleRoute("/sign-up")}
+        >
+          SignIn
+        </li>
       </ul>
     </nav>
   );
