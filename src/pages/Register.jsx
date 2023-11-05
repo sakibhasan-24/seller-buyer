@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import GoogleButton from "../components/GoogleButton";
-export default function SignUp() {
+export default function Register() {
   const [formData, setFormData] = useState({
+    uName: "",
     email: "",
     password: "",
   });
@@ -11,7 +12,7 @@ export default function SignUp() {
   //password show or not
 
   const [showPassword, setShowPassword] = useState(false);
-  const { email, password } = formData;
+  const { uName, email, password } = formData;
   const handleFormData = (e) => {
     e.preventDefault();
     // console.log([e.target.id]);email///password field
@@ -35,6 +36,13 @@ export default function SignUp() {
         </div>
         <div className="w-[100%] lg:w-[40%] md:w-[70%] lg:ml-2">
           <form className="">
+            <input
+              type="text"
+              id="name"
+              value={uName}
+              className="w-full px-4  py-3 border-gray-300 rounded-lg mb-6"
+              onChange={handleFormData}
+            />
             <input
               type="email"
               id="email"
@@ -64,12 +72,12 @@ export default function SignUp() {
             </div>
             <div className="flex items-center justify-between  whitespace-nowrap text-xs lg:text-lg mt-4">
               <p>
-                Dont't Have an account?
+                already Have an account?
                 <Link
                   className="text-red-200 ml-2 hover:text-red-800"
-                  to="/register"
+                  to="/sign-up"
                 >
-                  Register
+                  Sign Up
                 </Link>
               </p>
               <p>
