@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import GoogleButton from "../components/GoogleButton";
 import { toast } from "react-toastify";
