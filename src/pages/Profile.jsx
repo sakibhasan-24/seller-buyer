@@ -1,10 +1,18 @@
+import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
+  const navigate = useNavigate();
+  const auth = getAuth();
   const [formData, setFormData] = useState({
-    name: "sakib",
-    email: "sakibhasan7724@gmail.com",
+    name: auth.currentUser.displayName,
+    email: auth.currentUser.email,
   });
+  const handleLogOut = () => {
+    auth.signOut();
+    navigate("/");
+  };
   return (
     <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
       <h1 className="text-3xl text-center font-bold mt-4">My Profile</h1>
@@ -29,7 +37,12 @@ export default function Profile() {
               Need Motification?{" "}
               <span className="text-red-600 hover:text-red-400">Edit</span>{" "}
             </p>
-            <p>sign Out</p>
+            <p
+              className="bg-blue-500 px-2 py-1 text-white cursor-pointer"
+              onClick={handleLogOut}
+            >
+              sign Out
+            </p>
           </div>
         </form>
       </div>
