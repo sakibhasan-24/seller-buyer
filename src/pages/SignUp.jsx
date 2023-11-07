@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleButton from "../components/GoogleButton";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
 export default function SignUp() {
   const [formData, setFormData] = useState({
     email: "",
@@ -9,16 +11,29 @@ export default function SignUp() {
   });
 
   //password show or not
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { email, password } = formData;
   const handleFormData = (e) => {
     e.preventDefault();
-    // console.log([e.target.id]);email///password field
+    // console.log([e.target.id]);
+    // email; ///password field
     setFormData((previousState) => ({
       ...previousState,
       [e.target.id]: e.target.value,
     }));
+  };
+  const handleLogIn = async (e) => {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userInfo = await signInWithEmailAndPassword(auth, email, password);
+      if (userInfo.user) {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("!in valid User");
+    }
   };
   return (
     <section>
@@ -34,7 +49,7 @@ export default function SignUp() {
           />
         </div>
         <div className="w-[100%] lg:w-[40%] md:w-[70%] lg:ml-2">
-          <form className="">
+          <form onSubmit={handleLogIn}>
             <input
               type="email"
               id="email"

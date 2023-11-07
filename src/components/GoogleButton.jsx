@@ -17,6 +17,7 @@ export default function GoogleButton() {
       // ------------------add user in the db-------------------
 
       const docRef = doc(db, "users", user.uid);
+      console.log("docref", docRef);
       const docSnap = await getDoc(docRef);
       if (!docSnap.exists()) {
         await setDoc(docRef, {
