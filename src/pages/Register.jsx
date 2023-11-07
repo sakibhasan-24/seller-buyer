@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import GoogleButton from "../components/GoogleButton";
+import { db } from "../firebase.config";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 export default function Register() {
   const [formData, setFormData] = useState({
     uName: "",
@@ -21,6 +28,31 @@ export default function Register() {
       [e.target.id]: e.target.value,
     }));
   };
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userInfo = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      updateProfile(auth.currentUser, {
+        displayName: uName,
+      });
+      const user = userInfo.user;
+      // remove password...No need to store password
+      const newFormData = { ...formData };
+      delete newFormData.password;
+      newFormData.timestamp = serverTimestamp();
+
+      // save it inside db
+      await setDoc(doc(db, "users", user.uid), newFormData);
+      // console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <section>
       <h1 className="font-bold text-center text-3xl mt-6 max-w-5xl mx-auto">
@@ -35,10 +67,10 @@ export default function Register() {
           />
         </div>
         <div className="w-[100%] lg:w-[40%] md:w-[70%] lg:ml-2">
-          <form className="">
+          <form onSubmit={handleFormSubmit} className="">
             <input
               type="text"
-              id="name"
+              id="uName"
               value={uName}
               className="w-full px-4  py-3 border-gray-300 rounded-lg mb-6"
               onChange={handleFormData}
