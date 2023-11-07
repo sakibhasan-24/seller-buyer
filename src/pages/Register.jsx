@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -9,7 +9,9 @@ import {
 import GoogleButton from "../components/GoogleButton";
 import { db } from "../firebase.config";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 export default function Register() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     uName: "",
     email: "",
@@ -48,9 +50,13 @@ export default function Register() {
 
       // save it inside db
       await setDoc(doc(db, "users", user.uid), newFormData);
+      // after successfull login navigate it in home page
+      navigate("/");
+      toast.success(newFormData.uName + "successufully register");
       // console.log(user);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error("something went wrong");
     }
   };
   return (

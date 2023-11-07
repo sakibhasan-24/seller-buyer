@@ -6,7 +6,8 @@ import SignUp from "./pages/SignUp";
 
 import Register from "./pages/Register";
 import ForgetPassword from "./pages/ForgetPassword";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   const router = createBrowserRouter([
     {
@@ -24,6 +25,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <ToastContainer theme="dark" />
     </>
   );
 }
