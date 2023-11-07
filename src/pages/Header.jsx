@@ -38,7 +38,7 @@ export default function Header() {
         >
           Offers
         </li>
-        <li
+        {/* <li
           className={`${
             handleHeaderStyle("/profile") &&
             "font-bold border-b-4 border-red-300"
@@ -46,7 +46,7 @@ export default function Header() {
           onClick={() => handleRoute("/profile")}
         >
           Profile
-        </li>
+        </li> */}
         <li
           className={`${
             handleHeaderStyle("/sign-up") &&

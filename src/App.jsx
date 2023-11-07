@@ -8,13 +8,21 @@ import Register from "./pages/Register";
 import ForgetPassword from "./pages/ForgetPassword";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PrivateRoute from "./components/PrivateRoute";
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Home />,
       children: [
-        { path: "/profile", element: <Profile></Profile> },
+        {
+          path: "/profile",
+          element: (
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          ),
+        },
         { path: "/offer", element: <Offers /> },
         { path: "/sign-up", element: <SignUp /> },
         { path: "/register", element: <Register /> },
@@ -22,6 +30,7 @@ function App() {
       ],
     },
   ]);
+
   return (
     <>
       <RouterProvider router={router} />
