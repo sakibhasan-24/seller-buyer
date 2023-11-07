@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import GoogleButton from "../components/GoogleButton";
+import { toast } from "react-toastify";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
 
@@ -10,6 +12,16 @@ export default function ForgetPassword() {
   const handleFormData = (e) => {
     e.preventDefault();
     setEmail(e.target.value);
+  };
+  const handleForgetPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
+      toast.success(" check your email.if needed check spam");
+    } catch (error) {
+      toast.error("email is not Correct");
+    }
   };
   return (
     <section>
@@ -25,7 +37,7 @@ export default function ForgetPassword() {
           />
         </div>
         <div className="w-[100%] lg:w-[40%] md:w-[70%] lg:ml-2">
-          <form className="">
+          <form onSubmit={handleForgetPassword} className="">
             <input
               type="email"
               id="email"
