@@ -1,8 +1,11 @@
-import React from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const navigateRoute = useNavigate();
+  const [pageStatus, setPageStatus] = useState("sign up");
+  const auth = getAuth();
   const location = useLocation();
   const handleRoute = (route) => {
     navigateRoute(route);
@@ -11,6 +14,15 @@ export default function Header() {
   const handleHeaderStyle = (route) => {
     if (location.pathname === route) return true;
   };
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setPageStatus("Profile");
+      } else {
+        setPageStatus("sign up");
+      }
+    });
+  }, [auth]);
   return (
     <nav className="flex justify-between items-center mx-2 py-3 px-6 bg-green-200 border-b-4 shadow-2xl">
       <div className="w-1/4 ">
@@ -49,12 +61,12 @@ export default function Header() {
         </li> */}
         <li
           className={`${
-            handleHeaderStyle("/sign-up") &&
+            (handleHeaderStyle("/sign-up") || handleHeaderStyle("/profile")) &&
             "font-bold border-b-4 border-red-300"
           }`}
-          onClick={() => handleRoute("/sign-up")}
+          onClick={() => handleRoute("/profile")}
         >
-          SignIn
+          {pageStatus}
         </li>
       </ul>
     </nav>
