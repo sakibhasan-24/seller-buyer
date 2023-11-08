@@ -9,6 +9,7 @@ import ForgetPassword from "./pages/ForgetPassword";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./components/PrivateRoute";
+import CreateProducts from "./pages/CreateProducts";
 function App() {
   const router = createBrowserRouter([
     {
@@ -20,6 +21,14 @@ function App() {
           element: (
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "/create-products",
+          element: (
+            <PrivateRoute>
+              <CreateProducts></CreateProducts>
             </PrivateRoute>
           ),
         },

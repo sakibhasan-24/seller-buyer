@@ -1,7 +1,7 @@
 import { getAuth, updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase.config";
 
@@ -56,9 +56,11 @@ export default function Profile() {
             disabled={!isEdit}
             value={formData.name}
             onChange={handleEditValue}
-            className={`w-full mb-5 px-4 py-2 text-2xl text-gray-900 bg-white  border border-gray-400 rounded-xl transition duration-500 ease-in-out ${
-              isEdit && "bg-red-500"
-            }`}
+            className={`w-full mb-5 px-4 py-2 text-2xl
+             text-gray-900 bg-white  border border-gray-400
+              rounded-xl transition duration-500 ease-in-out ${
+                isEdit && "bg-red-500"
+              }`}
           />
           <input
             type="email"
@@ -90,6 +92,16 @@ export default function Profile() {
             </p>
           </div>
         </form>
+
+        {/* section of listing....... */}
+        <Link to="/create-products">
+          <button
+            className="w-full bg-blue-950 text-white px-10 py-4 rounded-lg"
+            type="submit"
+          >
+            Sell Your Own Products
+          </button>
+        </Link>
       </div>
     </section>
   );
