@@ -3,7 +3,6 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Offers from "./pages/Offers";
 import SignUp from "./pages/SignUp";
-
 import Register from "./pages/Register";
 import ForgetPassword from "./pages/ForgetPassword";
 import { ToastContainer } from "react-toastify";

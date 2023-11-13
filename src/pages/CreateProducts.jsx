@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 export default function CreateProducts() {
+  const [geoLocation, setGeoLocation] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -13,36 +17,71 @@ export default function CreateProducts() {
     offer: true,
     regularPrice: 0,
     discountePrice: 0,
+    latitude: 0,
+    longitude: 0,
   });
-  const handleTypeOfService = (e) => {};
+
+  const handleTypeOfService = (e) => {
+    // i need to update setForm Data with new Value
+    let booleanValue = null;
+    if (e.target.value === "true") {
+      booleanValue = true;
+    }
+    if (e.target.value === "false") {
+      booleanValue = false;
+    }
+
+    if (e.target.files) {
+      setFormData((prevData) => ({ ...prevData, images: e.target.files }));
+    }
+    if (!e.target.files) {
+      setFormData((prevData) => ({
+        ...prevData,
+        [e.target.id]: booleanValue ?? e.target.value,
+      }));
+    }
+  };
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    if (formData.regularPrice <= formData.discountePrice) {
+      setLoading(false);
+      toast.error("offer price cannot be equal or greater than regular price");
+    }
+  };
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <section className="max-w-md mx-auto px-2 my-10">
       <h1 className="text-center mt-8 font-bold text-2xl">
         Create Your Products
       </h1>
-      <form>
+      <form onSubmit={handleSubmitForm}>
         <p className="text-lg font-semibold mt-4">sell/buy</p>
         <div className="flex gap-2">
           <button
-            onChange={handleTypeOfService}
+            onClick={handleTypeOfService}
             id="type"
+            value="sell"
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
-              formData.type === "buy"
-                ? "bg-white text-black"
-                : "bg-black text-white"
+              formData.type === "sell"
+                ? "bg-black text-white"
+                : " bg-white text-black"
             } `}
           >
             Sell
           </button>
           <button
-            onChange={handleTypeOfService}
+            onClick={handleTypeOfService}
             id="type"
+            value="rent"
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
               formData.type === "rent"
-                ? "bg-white text-black"
-                : "bg-black text-white"
+                ? "bg-black text-white"
+                : " bg-white text-black"
             } `}
           >
             Buy
@@ -50,6 +89,7 @@ export default function CreateProducts() {
         </div>
         <p className="mt-4 text-lg font-semibold">Name</p>
         <input
+          onChange={handleTypeOfService}
           type="text"
           name="name"
           id="name"
@@ -63,26 +103,28 @@ export default function CreateProducts() {
           <div className="">
             <p className="text-lg font-semibold">Bedrooms</p>
             <input
+              onChange={handleTypeOfService}
               className="px-4 py-2 text-center text-gray-700 rounded-md"
               type="number"
               name=""
-              id="usedYear"
+              id="bedrooms"
               value={formData.bedrooms}
               min={1}
-              max={5}
+              max={50}
               required
             />
           </div>
           <div className="">
             <p className="text-lg font-semibold">BathRooms</p>
             <input
+              onChange={handleTypeOfService}
               className="px-4 py-2 text-center text-gray-700 rounded-md"
               type="number"
               name=""
-              id="releaseYear"
+              id="bathRooms"
               value={formData.bathRooms}
               min={1}
-              max={5}
+              max={50}
               required
             />
           </div>
@@ -91,22 +133,22 @@ export default function CreateProducts() {
         <div className="flex gap-2">
           <button
             value={true}
-            onChange={handleTypeOfService}
+            onClick={handleTypeOfService}
             id="parking"
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
-              formData.parking ? "bg-white text-black" : "bg-black text-white"
+              formData.parking ? "bg-black text-white" : " bg-white text-black"
             } `}
           >
             Yes
           </button>
           <button
-            onChange={handleTypeOfService}
+            onClick={handleTypeOfService}
             id="parking"
             value={false}
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
-              !formData.parking ? "bg-white text-black" : "bg-black text-white"
+              !formData.parking ? "bg-black text-white" : " bg-white text-black"
             } `}
           >
             No
@@ -115,25 +157,27 @@ export default function CreateProducts() {
         <p className="text-lg font-semibold mt-4">Furnished</p>
         <div className="flex gap-2">
           <button
-            onChange={handleTypeOfService}
+            onClickCapture={handleTypeOfService}
             id="furnished"
-            value={false}
+            value={true}
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
-              formData.furnished ? "bg-white text-black" : "bg-black text-white"
+              formData.furnished
+                ? "bg-black text-white"
+                : " bg-white text-black"
             } `}
           >
             Yes
           </button>
           <button
             value={false}
-            onChange={handleTypeOfService}
+            onClick={handleTypeOfService}
             id="furnished"
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
               !formData.furnished
-                ? "bg-white text-black"
-                : "bg-black text-white"
+                ? "bg-black text-white"
+                : " bg-white text-black"
             } `}
           >
             No
@@ -147,11 +191,43 @@ export default function CreateProducts() {
           placeholder="address"
           maxLength="30"
           required
+          onChange={handleTypeOfService}
           value={formData.address}
           className="w-full mt-2 px-4 py-2 rounded-md focus:border-sky-300"
         />
+        {!geoLocation && (
+          <div className="flex justify-between gap-4 ">
+            <div>
+              <p className="mt-4 text-lg font-semibold">lattitude</p>
+              <input
+                type="number"
+                name="latitude"
+                id="latitude"
+                placeholder="address"
+                required
+                onChange={handleTypeOfService}
+                value={formData.latitude}
+                className="w-full mt-2 px-4 py-2 rounded-md focus:border-sky-300"
+              />
+            </div>
+            <div>
+              <p className="mt-4 text-lg font-semibold">longitude</p>
+              <input
+                type="number"
+                name="longitude"
+                id="longitude"
+                placeholder="address"
+                required
+                onChange={handleTypeOfService}
+                value={formData.longitude}
+                className="w-full mt-2 px-4 py-2 rounded-md focus:border-sky-300"
+              />
+            </div>
+          </div>
+        )}
         <p className="mt-4 text-lg font-semibold">Description</p>
         <textarea
+          onChange={handleTypeOfService}
           type="text"
           name="description"
           id="description"
@@ -163,22 +239,22 @@ export default function CreateProducts() {
         <div className="flex gap-2">
           <button
             value={true}
-            onChange={handleTypeOfService}
+            onClick={handleTypeOfService}
             id="offer"
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
-              formData.offer ? "bg-white text-black" : "bg-black text-white"
+              formData.offer ? "bg-black text-white" : " bg-white text-black"
             } `}
           >
             Yes
           </button>
           <button
-            onChange={handleTypeOfService}
+            onClick={handleTypeOfService}
             id="offer"
             value={false}
             type="button"
             className={` w-full px-6 py-3 font-bold text-sm uppercase shadow-md rounded-lg hover:shadow-lg focus:shadow-lg active:shadow-2xl transition duration-300 ${
-              !formData.offer ? "bg-white text-black" : "bg-black text-white"
+              !formData.offer ? "bg-black text-white" : " bg-white text-black"
             } `}
           >
             No
@@ -189,6 +265,7 @@ export default function CreateProducts() {
             <p className="text-lg font-bold">regular Price</p>
             <div className="flex items-center justify-center mr-4">
               <input
+                onChange={handleTypeOfService}
                 type="number"
                 name="regularPrice"
                 id="regularPrice"
@@ -218,6 +295,7 @@ export default function CreateProducts() {
                   value={formData.discountePrice}
                   min={0}
                   max={100000}
+                  onChange={handleTypeOfService}
                   required
                   className="w-full text-center py-2 px-4 text-lg text-gray-800 bg-white border-gray-500 rounded "
                 />
@@ -234,6 +312,7 @@ export default function CreateProducts() {
           <p className="text-lg font-semibold ">Images/</p>
           <p className="text-gray-600">Max (6)</p>
           <input
+            onChange={handleTypeOfService}
             type="file"
             name="images"
             id="images"
