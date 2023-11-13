@@ -1,8 +1,22 @@
 import React, { useState } from "react";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { serverTimestamp, addDoc, collection } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
+import { v4 as uuidv4 } from "uuid";
+import { db } from "../firebase.config";
+import { useNavigate } from "react-router-dom";
 export default function CreateProducts() {
+  const auth = getAuth();
+  const navigate = useNavigate();
+
   const [geoLocation, setGeoLocation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,6 +33,7 @@ export default function CreateProducts() {
     discountePrice: 0,
     latitude: 0,
     longitude: 0,
+    images: {},
   });
 
   const handleTypeOfService = (e) => {
@@ -41,17 +56,88 @@ export default function CreateProducts() {
       }));
     }
   };
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
     setLoading(true);
-    if (formData.regularPrice <= formData.discountePrice) {
+    if (+formData.regularPrice <= +formData.discountePrice) {
       setLoading(false);
-      toast.error("offer price cannot be equal or greater than regular price");
+      return toast.error(
+        "offer price cannot be equal or greater than regular price"
+      );
     }
+    if (formData.images.length > 6) {
+      setLoading(false);
+      toast.error("maximum 6 images allow");
+    }
+
+    let geoLocationData = {};
+    geoLocationData.lat = formData.latitude;
+    geoLocationData.lon = formData.longitude;
+    console.log(geoLocationData);
+    const storeImg = async (image) => {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage();
+        const fileName = `${auth.currentUser.uid}-${image.name} -${uuidv4()} `;
+        const storageRef = ref(storage, fileName);
+        // now upload it
+        const uploadTask = uploadBytesResumable(storageRef, image);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            // console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                // console.log("Upload is paused");
+                break;
+              case "running":
+                // console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            reject(error);
+            console.log("upload", error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL);
+            });
+          }
+        );
+      });
+    };
+    const imagesUrl = await Promise.all(
+      [...formData.images].map((image) => storeImg(image))
+    ).catch((err) => {
+      setLoading(false);
+      console.log("image error ", err);
+      toast.error(err);
+      return;
+    });
+    const newFormData = {
+      ...formData,
+      imagesUrl,
+      geoLocationData,
+      createdTime: serverTimestamp(),
+    };
+    delete newFormData.images;
+    if (newFormData.offer === false) {
+      delete newFormData.discountePrice;
+    }
+    // const docRef = await addDoc(collection(db, "listings"), newFormData);
+    const docRef = await addDoc(collection(db, "listings"), newFormData);
+    console.log(docRef);
+    setLoading(false);
+    toast.success("successfully created");
+    // navigate(`/category/${newFormData.type}/${docRef.id}`);
   };
+
   if (loading) {
     return <Spinner />;
   }
+
   return (
     <section className="max-w-md mx-auto px-2 my-10">
       <h1 className="text-center mt-8 font-bold text-2xl">
@@ -203,7 +289,7 @@ export default function CreateProducts() {
                 type="number"
                 name="latitude"
                 id="latitude"
-                placeholder="address"
+                placeholder="latitude"
                 required
                 onChange={handleTypeOfService}
                 value={formData.latitude}
@@ -216,7 +302,7 @@ export default function CreateProducts() {
                 type="number"
                 name="longitude"
                 id="longitude"
-                placeholder="address"
+                placeholder="longitude"
                 required
                 onChange={handleTypeOfService}
                 value={formData.longitude}
