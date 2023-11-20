@@ -147,7 +147,7 @@ export default function Profile() {
             <h1 className="text-2xl text-center font-bold text-gray-700">
               my listing {foundData.length}
             </h1>
-            <ul>
+            <ul className="sm:grid  grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 my-6 ">
               {foundData.map((item) => (
                 <ExistingItem key={item.id} id={item.id} item={item.data} />
               ))}
