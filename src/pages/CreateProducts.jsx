@@ -132,6 +132,7 @@ export default function CreateProducts() {
       imagesUrl,
       geoLocationData,
       createdTime: serverTimestamp(),
+      userIdentify: auth.currentUser.uid,
     };
     delete newFormData.images;
     if (newFormData.offer === false) {
