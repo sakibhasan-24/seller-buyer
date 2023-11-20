@@ -10,9 +10,11 @@ import {
 import { serverTimestamp, addDoc, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid"; //provide unique id
 import { db } from "../firebase.config";
 import { useNavigate } from "react-router-dom";
+
+// --------------------end of import librarys-------------------------------///
 export default function CreateProducts() {
   const auth = getAuth();
   const navigate = useNavigate();
@@ -38,24 +40,30 @@ export default function CreateProducts() {
 
   const handleTypeOfService = (e) => {
     // i need to update setForm Data with new Value
-    let booleanValue = null;
+    let booleanValue = null; //offer,parking,furnished
     if (e.target.value === "true") {
+      // if offer true then booleanValue will true
       booleanValue = true;
     }
     if (e.target.value === "false") {
+      // if offer false then booleanValue will false
       booleanValue = false;
     }
 
     if (e.target.files) {
+      // actually only images file ..if these value come from files then take images also previous value
       setFormData((prevData) => ({ ...prevData, images: e.target.files }));
     }
     if (!e.target.files) {
+      // if not files(images)=> like name,price etc
       setFormData((prevData) => ({
         ...prevData,
         [e.target.id]: booleanValue ?? e.target.value,
       }));
     }
   };
+
+  // -------------------------FORM submit---------------------------------------
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -70,13 +78,16 @@ export default function CreateProducts() {
       toast.error("maximum 6 images allow");
     }
 
+    // manually set it as i have no map api card
     let geoLocationData = {};
     geoLocationData.lat = formData.latitude;
     geoLocationData.lon = formData.longitude;
-    console.log(geoLocationData);
+    // console.log(geoLocationData);
+
+    // ----------------------------------store image in firebase----------------------------
     const storeImg = async (image) => {
       return new Promise((resolve, reject) => {
-        const storage = getStorage();
+        const storage = getStorage(); //@returns — A FirebaseStorage instance.
         const fileName = `${auth.currentUser.uid}-${image.name} -${uuidv4()} `;
         const storageRef = ref(storage, fileName);
         // now upload it
@@ -98,7 +109,7 @@ export default function CreateProducts() {
           },
           (error) => {
             reject(error);
-            console.log("upload", error);
+            // console.log("upload", error);
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -112,7 +123,7 @@ export default function CreateProducts() {
       [...formData.images].map((image) => storeImg(image))
     ).catch((err) => {
       setLoading(false);
-      console.log("image error ", err);
+      // console.log("image error ", err);
       toast.error(err);
       return;
     });
@@ -128,11 +139,13 @@ export default function CreateProducts() {
     }
     // const docRef = await addDoc(collection(db, "listings"), newFormData);
     const docRef = await addDoc(collection(db, "listings"), newFormData);
-    console.log(docRef);
+    // console.log(docRef);
     setLoading(false);
     toast.success("successfully created");
-    // navigate(`/category/${newFormData.type}/${docRef.id}`);
+    navigate(`/category/${newFormData.type}/${docRef.id}`);
   };
+
+  // -------------------end of form submit------------------
 
   if (loading) {
     return <Spinner />;

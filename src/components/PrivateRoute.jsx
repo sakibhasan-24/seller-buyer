@@ -3,7 +3,7 @@ import { useAuthHooks } from "../customHooks/useAuthHooks";
 import Spinner from "./Spinner";
 export default function PrivateRoute({ children }) {
   const { userLoggedIn, loading } = useAuthHooks();
-  console.log(userLoggedIn, loading);
+  // console.log(userLoggedIn, loading);
   if (loading) {
     return <Spinner />;
   }
