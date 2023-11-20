@@ -1,9 +1,19 @@
 import { getAuth, updateProfile } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase.config";
+import ExistingItem from "./ExistingItem";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -12,6 +22,8 @@ export default function Profile() {
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
   });
+  const [foundData, setFoundData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const handleLogOut = () => {
     auth.signOut();
     navigate("/");
@@ -44,65 +56,105 @@ export default function Profile() {
       toast.error("No Update Found");
     }
   };
+
+  // load data already in the database based on email
+
+  useEffect(() => {
+    const loadItemsFromDb = async () => {
+      const collectionReference = collection(db, "listings");
+      // console.log(collectionReference);
+      const queryData = query(
+        collectionReference,
+        where("userIdentify", "==", auth.currentUser.uid),
+        orderBy("createdTime", "desc")
+      );
+      // console.log("qq", queryData);
+      const getData = await getDocs(queryData);
+      // console.log(getData);
+      let itemsFound = [];
+      getData.forEach((item) => {
+        return itemsFound.push({ id: item.id, data: item.data() });
+      });
+      setFoundData(itemsFound);
+      setLoading(false);
+    };
+    loadItemsFromDb();
+  }, [auth.currentUser.uid]);
   return (
-    <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
-      <h1 className="text-3xl text-center font-bold mt-4">My Profile</h1>
-      <div className="w-full md:w-[50%] mt-6 px-4 ">
-        <form>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            disabled={!isEdit}
-            value={formData.name}
-            onChange={handleEditValue}
-            className={`w-full mb-5 px-4 py-2 text-2xl
+    <>
+      <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
+        <h1 className="text-3xl text-center font-bold mt-4">My Profile</h1>
+        <div className="w-full md:w-[50%] mt-6 px-4 ">
+          <form>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              disabled={!isEdit}
+              value={formData.name}
+              onChange={handleEditValue}
+              className={`w-full mb-5 px-4 py-2 text-2xl
              text-gray-900 bg-white  border border-gray-400
               rounded-xl transition duration-500 ease-in-out ${
                 isEdit && "bg-red-500"
               }`}
-          />
-          <input
-            type="email"
-            name="email"
-            id="email"
-            disabled={true}
-            value={formData.email}
-            className={`w-full mb-5 px-4 py-2 text-2xl text-gray-900 bg-white  border border-gray-400 rounded-xl transition duration-500 ease-in-out 
+            />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              disabled={true}
+              value={formData.email}
+              className={`w-full mb-5 px-4 py-2 text-2xl text-gray-900 bg-white  border border-gray-400 rounded-xl transition duration-500 ease-in-out 
             }`}
-          />
-          <div className="flex justify-between mb-6 whitespace-nowrap text-sm lg:text-lg">
-            <p className="flex items-center ">
-              Need Motification?{" "}
-              <span
-                onClick={() => {
-                  isEdit && handleEditValueSubmit();
-                  setIsEdit(!isEdit);
-                }}
-                className="text-red-600 hover:text-red-950 cursor-pointer font-bold"
+            />
+            <div className="flex justify-between mb-6 whitespace-nowrap text-sm lg:text-lg">
+              <p className="flex items-center ">
+                Need Motification?{" "}
+                <span
+                  onClick={() => {
+                    isEdit && handleEditValueSubmit();
+                    setIsEdit(!isEdit);
+                  }}
+                  className="text-red-600 hover:text-red-950 cursor-pointer font-bold"
+                >
+                  {isEdit ? "save the changes" : "edit"}
+                </span>
+              </p>
+              <p
+                className="bg-blue-500 px-2 py-1 text-white cursor-pointer"
+                onClick={handleLogOut}
               >
-                {isEdit ? "save the changes" : "edit"}
-              </span>
-            </p>
-            <p
-              className="bg-blue-500 px-2 py-1 text-white cursor-pointer"
-              onClick={handleLogOut}
-            >
-              sign Out
-            </p>
-          </div>
-        </form>
+                sign Out
+              </p>
+            </div>
+          </form>
 
-        {/* section of listing....... */}
-        <Link to="/create-products">
-          <button
-            className="w-full bg-blue-950 text-white px-10 py-4 rounded-lg"
-            type="submit"
-          >
-            Sell Your Own Products
-          </button>
-        </Link>
+          {/* section of listing....... */}
+          <Link to="/create-products">
+            <button
+              className="w-full bg-blue-950 text-white px-10 py-4 rounded-lg"
+              type="submit"
+            >
+              Sell Your Own Products
+            </button>
+          </Link>
+        </div>
+      </section>
+      <div className="my-6 max-w-6xl mx-auto px-3">
+        {!loading && foundData.length > 0 && (
+          <>
+            <h1 className="text-2xl text-center font-bold text-gray-700">
+              my listing {foundData.length}
+            </h1>
+            <ul>
+              {foundData.map((item) => (
+                <ExistingItem key={item.id} id={item.id} item={item.data} />
+              ))}
+            </ul>
+          </>
+        )}
       </div>
-    </section>
+    </>
   );
 }
