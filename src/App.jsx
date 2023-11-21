@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./components/PrivateRoute";
 import CreateProducts from "./pages/CreateProducts";
 import Edit from "./pages/Edit";
+import SingleItem from "./pages/SingleItem";
 function App() {
   const router = createBrowserRouter([
     {
@@ -40,6 +41,7 @@ function App() {
             </PrivateRoute>
           ),
         },
+        { path: "/category/:categoryName/:id", element: <SingleItem /> },
         { path: "/offer", element: <Offers /> },
         { path: "/sign-up", element: <SignUp /> },
         { path: "/register", element: <Register /> },
