@@ -18,6 +18,8 @@ import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 // Import Swiper styles
 import "swiper/css/bundle";
 import ContactForm from "../components/ContactForm";
+// import { Marker, TileLayer, MapContainer, Popup } from "leaflet";
+import { MapContainer, Popup, TileLayer, Marker } from "react-leaflet";
 export default function SingleItem() {
   const auth = getAuth();
   const { id } = useParams();
@@ -81,7 +83,7 @@ export default function SingleItem() {
         </p>
       )}
       {/* map and info */}
-      <div className="max-w-6xl lg:mx-auto m-4 p-4 shadow-xl flex flex-col md:flex-row lg:flex-row justify-center items-center lg:space-x-6">
+      <div className="w-full mx-auto whitespace-nowrap md:max-w-6xl lg:mx-auto m-4 p-4 shadow-xl flex flex-col md:flex-row lg:flex-row justify-center items-center lg:space-x-6">
         <div className="  w-full my-6">
           <p className="text-lg text-blue-800 font-semibold">
             {items.name}---- $
@@ -106,7 +108,7 @@ export default function SingleItem() {
           <p>
             Details: <span>{items.description}</span>{" "}
           </p>
-          <ul className="flex items-center space-x-3 lg:space-x-10 tetx-xs my-3 ">
+          <ul className="flex items-center space-x-3 lg:space-x-10 text-xs my-3 ">
             <li className="flex items-center  font-bold ">
               <FaBed className="mr-2" /> {items.bedrooms} beds
             </li>
@@ -137,7 +139,27 @@ export default function SingleItem() {
             <ContactForm items={items} userIdentify={items.userIdentify} />
           )}
         </div>
-        <div className="bg-purple-300 h-[200px] w-full lg:h-[400px overflow-x-hidden z-10"></div>
+        {/* map */}
+        <div className=" h-[200px] lg:h-[400px] mt-6 md:mt-0 w-full md:ml-2 md:h-[400px overflow-x-hidden z-10">
+          <MapContainer
+            center={[items.geoLocationData.lat, items.geoLocationData.lon]}
+            zoom={13}
+            scrollWheelZoom={false}
+            style={{ width: "100%", height: "100%" }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker
+              position={[items.geoLocationData.lat, items.geoLocationData.lon]}
+            >
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
       </div>
     </main>
   );
