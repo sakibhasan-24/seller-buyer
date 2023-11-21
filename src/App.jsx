@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./components/PrivateRoute";
 import CreateProducts from "./pages/CreateProducts";
+import Edit from "./pages/Edit";
 function App() {
   const router = createBrowserRouter([
     {
@@ -28,6 +29,14 @@ function App() {
           element: (
             <PrivateRoute>
               <CreateProducts></CreateProducts>
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "/edit/:id",
+          element: (
+            <PrivateRoute>
+              <Edit />
             </PrivateRoute>
           ),
         },

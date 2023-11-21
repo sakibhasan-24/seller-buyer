@@ -44,8 +44,13 @@ export default function ExistingItem({ item, id, deleteItem, editItem }) {
         </div>
       </Link>
       <div className="flex  items-center justify-between gap-8 text-xl cursor-pointer">
-        {deleteItem && <MdDelete className="my-2 text-red-500" />}
-        {editItem && <MdEdit />}
+        {deleteItem && (
+          <MdDelete
+            className="my-2 text-red-500"
+            onClick={() => deleteItem(item.id)}
+          />
+        )}
+        {editItem && <MdEdit onClick={() => editItem(item.id)} />}
       </div>
     </li>
   );

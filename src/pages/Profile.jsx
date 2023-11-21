@@ -1,6 +1,7 @@
 import { getAuth, updateProfile } from "firebase/auth";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -81,9 +82,23 @@ export default function Profile() {
     loadItemsFromDb();
   }, [auth.currentUser.uid]);
   // delete
-  const deleteItem = (id) => {};
+  const deleteItem = async (id) => {
+    // filter method also allow
+    // we will use firebase delete doc
+    if (window.confirm("are you sure want to delete?")) {
+      // delete functionality
+      console.log("cl");
+      await deleteDoc(doc(db, "listings", id));
+      const newItems = foundData.filter((item) => item.id !== id);
+      // console.log(newItems);
+      setFoundData(newItems);
+      toast.success("deleted successfully");
+    }
+  };
   // edit
-  const editItem = (id) => {};
+  const editItem = async (id) => {
+    navigate(`/edit/${id}`);
+  };
   return (
     <>
       <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
