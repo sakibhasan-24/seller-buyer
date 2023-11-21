@@ -13,6 +13,7 @@ export default function SingleItem() {
   const { id } = useParams();
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [shareLink, setShareLink] = useState(false);
   useEffect(() => {
     const loadingData = async () => {
       const docRef = doc(db, "listings", id);
@@ -51,9 +52,23 @@ export default function SingleItem() {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="fixed h[20px] w-[40px] rounded-full p-2 top-[20%] right-[3%] bg-white cursor-pointer  z-10">
+      <div
+        onClick={() => {
+          navigator.clipboard.writeText(window.location.href);
+          setShareLink(true);
+          setTimeout(() => {
+            setShareLink(false);
+          }, 2000);
+        }}
+        className="fixed h[20px] w-[40px] rounded-full p-2 top-[20%] right-[3%] bg-white cursor-pointer  z-10"
+      >
         <FaShareAlt className="text-lg" />
       </div>
+      {shareLink && (
+        <p className="bg-white p-4 rounded-md fixed top-[30%] left-[4%] z-10 font-bold text-gray-800">
+          Link Copied
+        </p>
+      )}
     </main>
   );
 }
