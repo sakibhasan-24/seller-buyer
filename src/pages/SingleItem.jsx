@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase.config";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
+// Import Swiper styles
+import "swiper/css/bundle";
 export default function SingleItem() {
   const { id } = useParams();
   const [items, setItems] = useState(null);
@@ -19,8 +22,33 @@ export default function SingleItem() {
     };
     loadingData();
   }, [id]);
+  console.log(items);
   if (loading) {
     return <Spinner />;
   }
-  return <div>{items.name}</div>;
+  return (
+    <main className="my-4">
+      <Swiper
+        slidesPerView={1}
+        navigation
+        pagination={{ type: "progressbar" }}
+        effect="fade"
+        modules={[Autoplay, EffectFade, Navigation, Pagination]}
+        autoplay={{ delay: 2000 }}
+        loop={true}
+      >
+        {items.imagesUrl.map((image, idx) => (
+          <SwiperSlide key={idx}>
+            <div
+              className="h-[300px] w-full overflow-hidden relative"
+              style={{
+                background: `url(${items.imagesUrl[idx]}) center no-repeat`,
+                backgroundSize: "cover",
+              }}
+            ></div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </main>
+  );
 }
