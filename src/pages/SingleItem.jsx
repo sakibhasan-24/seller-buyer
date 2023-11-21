@@ -10,17 +10,21 @@ import {
   FaChair,
 } from "react-icons/fa";
 
+import { getAuth } from "firebase/auth";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase.config";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 // Import Swiper styles
 import "swiper/css/bundle";
+import ContactForm from "../components/ContactForm";
 export default function SingleItem() {
+  const auth = getAuth();
   const { id } = useParams();
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shareLink, setShareLink] = useState(false);
+  const [contactOwner, setContactOwner] = useState(false);
   useEffect(() => {
     const loadingData = async () => {
       const docRef = doc(db, "listings", id);
@@ -78,7 +82,7 @@ export default function SingleItem() {
       )}
       {/* map and info */}
       <div className="max-w-6xl lg:mx-auto m-4 p-4 shadow-xl flex flex-col md:flex-row lg:flex-row justify-center items-center lg:space-x-6">
-        <div className=" h-[200px] w-full lg:h-[400px ">
+        <div className="  w-full my-6">
           <p className="text-lg text-blue-800 font-semibold">
             {items.name}---- $
             {items.offer ? items.discountePrice : items.regularPrice}
@@ -118,6 +122,20 @@ export default function SingleItem() {
               {items.furnished ? "furnished" : "no furnished"}
             </li>
           </ul>
+          {/* message section  if this property is this for user no need to show button*/}
+          {items.userIdentify !== auth.currentUser?.uid && !contactOwner && (
+            <div className="my-10">
+              <button
+                onClick={() => setContactOwner(true)}
+                className="my-6 px-6 py-3 bg-blue-950 text-white font-semibold text-xs uppercase rounded shadow-md hover:bg-blue-600 w-full focus:bg-blue-400"
+              >
+                Contact Owner
+              </button>
+            </div>
+          )}
+          {contactOwner && (
+            <ContactForm items={items} userIdentify={items.userIdentify} />
+          )}
         </div>
         <div className="bg-purple-300 h-[200px] w-full lg:h-[400px overflow-x-hidden z-10"></div>
       </div>
