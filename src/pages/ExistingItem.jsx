@@ -1,8 +1,9 @@
 import moment from "moment";
-import { MdLocationOn } from "react-icons/md";
+import { MdLocationOn, MdDelete, MdEdit } from "react-icons/md";
+
 import { Link } from "react-router-dom";
 
-export default function ExistingItem({ item, id }) {
+export default function ExistingItem({ item, id, deleteItem, editItem }) {
   //   console.log(item.createdTime);
   const createTime = item.createTime?.toDate();
   return (
@@ -42,6 +43,10 @@ export default function ExistingItem({ item, id }) {
           </div>
         </div>
       </Link>
+      <div className="flex  items-center justify-between gap-8 text-xl cursor-pointer">
+        {deleteItem && <MdDelete className="my-2 text-red-500" />}
+        {editItem && <MdEdit />}
+      </div>
     </li>
   );
 }

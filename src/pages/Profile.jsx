@@ -80,6 +80,10 @@ export default function Profile() {
     };
     loadItemsFromDb();
   }, [auth.currentUser.uid]);
+  // delete
+  const deleteItem = (id) => {};
+  // edit
+  const editItem = (id) => {};
   return (
     <>
       <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
@@ -149,7 +153,13 @@ export default function Profile() {
             </h1>
             <ul className="sm:grid  grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 my-6 ">
               {foundData.map((item) => (
-                <ExistingItem key={item.id} id={item.id} item={item.data} />
+                <ExistingItem
+                  key={item.id}
+                  id={item.id}
+                  item={item.data}
+                  deleteItem={() => deleteItem(item.id)}
+                  editItem={() => editItem(item.id)}
+                />
               ))}
             </ul>
           </>
