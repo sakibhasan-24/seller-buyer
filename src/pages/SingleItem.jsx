@@ -154,9 +154,7 @@ export default function SingleItem() {
             <Marker
               position={[items.geoLocationData.lat, items.geoLocationData.lon]}
             >
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
+              <Popup>{items.address}</Popup>
             </Marker>
           </MapContainer>
         </div>

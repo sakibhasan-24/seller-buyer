@@ -11,6 +11,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import CreateProducts from "./pages/CreateProducts";
 import Edit from "./pages/Edit";
 import SingleItem from "./pages/SingleItem";
+import Slider from "./components/Slider";
 function App() {
   const router = createBrowserRouter([
     {
@@ -41,6 +42,8 @@ function App() {
             </PrivateRoute>
           ),
         },
+        { path: "/", element: <Slider /> },
+
         { path: "/category/:categoryName/:id", element: <SingleItem /> },
         { path: "/offer", element: <Offers /> },
         { path: "/sign-up", element: <SignUp /> },
