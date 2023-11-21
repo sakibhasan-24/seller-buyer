@@ -1,6 +1,8 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { FaShareAlt } from "react-icons/fa";
+
 import Spinner from "../components/Spinner";
 import { db } from "../firebase.config";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -49,6 +51,9 @@ export default function SingleItem() {
           </SwiperSlide>
         ))}
       </Swiper>
+      <div className="fixed h[20px] w-[40px] rounded-full p-2 top-[20%] right-[3%] bg-white cursor-pointer  z-10">
+        <FaShareAlt className="text-lg" />
+      </div>
     </main>
   );
 }
