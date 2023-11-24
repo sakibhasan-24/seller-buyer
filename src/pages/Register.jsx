@@ -17,7 +17,6 @@ export default function Register() {
     email: "",
     password: "",
   });
-
   //password show or not
 
   const [showPassword, setShowPassword] = useState(false);

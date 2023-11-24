@@ -13,8 +13,11 @@ export default function Slider() {
   const navigate = useNavigate();
   useEffect(() => {
     const loadData = async () => {
+      // where search data
       const docRef = collection(db, "listings");
+      // query data and take first 5
       const queryData = query(docRef, orderBy("createdTime", "desc"), limit(5));
+      // get data
       const dataFromStore = await getDocs(queryData);
       let itemsFromStorage = [];
       dataFromStore.forEach((item) => {
@@ -50,12 +53,19 @@ export default function Slider() {
                 onClick={() => navigate(`/category/${data.type}/${id}`)}
               >
                 <div
-                  className="w-full h-[300px] overflow-hidden"
+                  className="relative w-full h-[300px] overflow-hidden"
                   style={{
                     background: `url(${data.imagesUrl[0]}) center no-repeat`,
                     backgroundSize: "cover",
                   }}
-                ></div>
+                >
+                  <p className="absolute top-4 left-4 rounded-br-md px-2 py-1 text-blue-800 whitespace-nowrap bg-white w-[20%] text-center font-bold">
+                    {data.name}
+                  </p>
+                  <p className=" absolute bottom-0 left-4 rounded-tr-md px-2 py-1 text-teal-700 whitespace-nowrap bg-orange-600 w-[20%] text-center font-bold text-3xl">
+                    ${data.regularPrice}
+                  </p>
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
