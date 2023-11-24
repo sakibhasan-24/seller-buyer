@@ -50,7 +50,7 @@ export default function ExistingItem({ item, id, deleteItem, editItem }) {
             onClick={() => deleteItem(item.id)}
           />
         )}
-        {editItem && <MdEdit onClick={() => editItem(item.id)} />}
+        {editItem && <MdEdit onClick={() => editPItem(item.id)} />}
       </div>
     </li>
   );

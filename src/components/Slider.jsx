@@ -7,6 +7,7 @@ import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 // Import Swiper styles
 import "swiper/css/bundle";
 import { useNavigate } from "react-router-dom";
+import HomePage from "./HomePage";
 export default function Slider() {
   const [getItems, setGetItems] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -71,6 +72,7 @@ export default function Slider() {
           </Swiper>
         </>
       )}
+      <HomePage />
     </div>
   );
 }
