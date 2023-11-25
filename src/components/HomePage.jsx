@@ -110,7 +110,7 @@ export default function HomePage() {
         <h1 className="font-semibold text-blue-950 text-4xl mb-0  mt-8">
           Sale {saleItems.length}
         </h1>
-        <Link className="font-bold text-purple-600" to="/offer">
+        <Link className="font-bold text-purple-600" to="/category/sell">
           Show More
         </Link>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -124,7 +124,7 @@ export default function HomePage() {
         <h1 className="font-semibold text-blue-950 text-4xl mb-0  mt-8">
           Rent {rentItems.length}
         </h1>
-        <Link className="font-bold text-purple-600" to="/offer">
+        <Link className="font-bold text-purple-600" to={`/category/rent`}>
           Show More
         </Link>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

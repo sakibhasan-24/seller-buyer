@@ -12,6 +12,7 @@ import CreateProducts from "./pages/CreateProducts";
 import Edit from "./pages/Edit";
 import SingleItem from "./pages/SingleItem";
 import Slider from "./components/Slider";
+import Category from "./pages/Category";
 function App() {
   const router = createBrowserRouter([
     {
@@ -46,6 +47,7 @@ function App() {
 
         { path: "/category/:categoryName/:id", element: <SingleItem /> },
         { path: "/offer", element: <Offers /> },
+        { path: "/category/:categoryType", element: <Category /> },
         { path: "/sign-up", element: <SignUp /> },
         { path: "/register", element: <Register /> },
         { path: "/forgot-password", element: <ForgetPassword /> },
