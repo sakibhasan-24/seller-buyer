@@ -1,6 +1,12 @@
-# Project link
+# Project link : https://seller-buyer-2ccd0.web.app/offer
 
 # tools
+
+- react + router
+- tailwind css
+- moment.js
+- firebase
+- many more
 
 # features
 
