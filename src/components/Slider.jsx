@@ -33,7 +33,7 @@ export default function Slider() {
     return <Spinner />;
   }
   if (getItems.length === 0) {
-    return <></>;
+    return <>No items avaiable</>;
   }
   return (
     <div>
